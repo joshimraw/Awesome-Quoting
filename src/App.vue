@@ -1,34 +1,41 @@
 <template>
-	<div class="container">
-		<app-newquote @quoteAdded="addNewQuote"></app-newquote>
-		<hr>
-		<app-quotegrid :quotes="quotes" @quoteDeleted="quoteDelete"></app-quotegrid>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-5">
+			<h2 class="text-info">Http with Firebase</h2>
+			<div class="form-group">
+				<label>User Name</label>
+				<input type="text" class="form-control" v-model="users.name">
+			</div>
+
+			<div class="form-group">
+				<label>Email Address</label>
+				<input type="text" class="form-control" v-model="users.email">
+			</div>
+			<button class="btn btn-primary" @click="submit">Submit</button>
+		</div>
 	</div>
+</div>
 </template>
 
-
 <script>
-	import Newquote from './Newquote.vue';
-	import Quotegrid from './Quotegrid.vue';
 	export default{
-		data: function(){
+		data(){
 			return {
-				quotes: [
-					{ body: 'Somethign to display', title: 'Title of quote' }
-
-				]
+				users: {
+					name: '',
+					email: ''
+				}
 			}
 		},
-		components: {
-			appQuotegrid: Quotegrid,
-			appNewquote: Newquote
-		},
 		methods: {
-			addNewQuote(quote){
-				this.quotes.push(quote);
-			},
-			quoteDelete(index){
-				this.quotes.splice(index, 1);
+			submit(){
+				this.$http.post('https://vuejs-http-ae6c8.firebaseio.com/data.json', this.users)
+				.then(response => {
+					console.log(response);
+				}, error => {
+					console.log(error);
+				});
 			}
 		}
 	}
